@@ -1,5 +1,6 @@
 version: '2'
 services:
+
   nginx:
     build:
       context: ./
@@ -11,6 +12,7 @@ services:
     links:
       - php-fpm
     restart: always
+
   php-fpm:
     build:
       context: ./
@@ -22,6 +24,8 @@ services:
     environment:
       - "DB_PORT=3306"
       - "DB_HOST=mysql"
+      - "XDEBUG_CONFIG=remote_host=192.168.0.102"
+
   php-cli:
     build:
       context: ./
@@ -34,6 +38,7 @@ services:
       - "DB_PORT=3306"
       - "DB_HOST=mysql"
     tty: true
+
   mysql:
     image: mysql:5.7
     volumes:

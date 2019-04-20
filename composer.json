@@ -25,12 +25,13 @@
     "autoload": {
         "psr-4": {
             "Portal\\": "module/Portal/src/",
-            "ZFT\\": "module/ZFT/src"
+            "ZFT\\": "module/ZFT/src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ApplicationTest\\": "module/Application/test/"
+            "ApplicationTest\\": "module/Application/test/",
+            "ZFTTest\\": "module/ZFT/test/"
         }
     },
     "extra": [],
