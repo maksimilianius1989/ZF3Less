@@ -1,6 +1,6 @@
 .vagrant/
 vendor/
-idea/
+.idea/
 config/development.config.php
 data/cache/*
 !data/cache/.gitkeep
