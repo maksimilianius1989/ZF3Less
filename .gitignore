@@ -1,2 +1,7 @@
-vendor
-.idea
+.vagrant/
+vendor/
+idea/
+config/development.config.php
+data/cache/*
+!data/cache/.gitkeep
+phpunit.xml
