@@ -12,7 +12,5 @@
  */
 
 return [
-    'db' => [
-        'driver' => 'Mysql',
-    ],
+
 ];
