@@ -7,12 +7,9 @@
 
 namespace Portal;
 
-use Portal\Controller\IndexController;
-use Portal\Controller\IndexControllerFactory;
-use Psr\Container\ContainerInterface;
+use Portal\Controller\UserRelatedControllerFactory;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
-use ZFT\User\Repository as UserRepository;
 
 return [
     'router' => [
@@ -24,6 +21,16 @@ return [
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
                         'action'     => 'index',
+                    ],
+                ],
+            ],
+            'admin' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/admin',
+                    'defaults' => [
+                        'controller' => 'AdminController',
+                        'action' => 'index',
                     ],
                 ],
             ],
@@ -41,7 +48,8 @@ return [
     ],
     'controllers' => [
         'factories' => [
-            Controller\IndexController::class => IndexControllerFactory::class,
+            Controller\IndexController::class => UserRelatedControllerFactory::class,
+            'AdminController' => UserRelatedControllerFactory::class,
         ],
     ],
     'view_manager' => [

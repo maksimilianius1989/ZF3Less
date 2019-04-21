@@ -9,14 +9,14 @@ use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use ZFT\User\Repository as UserRepository;
 
-class IndexControllerFactory implements FactoryInterface
+class UserRelatedControllerFactory implements FactoryInterface
 {
 
     /**
      * Create an object
      *
      * @param  ContainerInterface $serviceManager
-     * @param  string $requestedName
+     * @param  string $controllerName
      * @param  null|array $options
      * @return object
      * @throws ServiceNotFoundException if unable to resolve the service.
@@ -24,10 +24,14 @@ class IndexControllerFactory implements FactoryInterface
      *     creating a service.
      * @throws ContainerException if any other error occurs
      */
-    public function __invoke(ContainerInterface $serviceManager, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $serviceManager, $controllerName, array $options = null)
     {
+        if (!class_exists($controllerName)) {
+            throw new ServiceNotFoundException("Requested controller name '$controllerName' does not exist.");
+        }
+
         $repository = $serviceManager->get(UserRepository::class);
 
-        return new IndexController($repository);
+        return new $controllerName($repository);
     }
 }
