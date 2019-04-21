@@ -8,7 +8,6 @@
 
 namespace ZFT;
 
-use Interop\Container\ContainerInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ServiceManager\Factory\InvokableFactory;
 use ZFT\User\MemoryIdentityMap;
