@@ -33,8 +33,10 @@ class Module implements ConfigProviderInterface, BootstrapListenerInterface
             $hasIdentity = $authService->hasIdentity();
             $identity = $authService->getIdentity();
 
-            var_dump($hasIdentity);
-            var_dump($identity);
+//            var_dump($hasIdentity);
+//            var_dump($identity);
+//            die;
+
             return;
         }, 100);
 

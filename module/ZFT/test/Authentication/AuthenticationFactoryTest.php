@@ -7,6 +7,8 @@ use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\ServiceManager;
 use ZFT\Authentication\AuthenticationServiceFactory;
+use Zend\Session;
+use Zend\Authentication;
 
 class AuthenticationFactoryTest extends TestCase
 {
@@ -19,6 +21,7 @@ class AuthenticationFactoryTest extends TestCase
 
         $this->sm = new ServiceManager();
         $this->sm->setService('Configuration', require __DIR__ . '/../../../../config/autoload/global.php');
+        $this->sm->setService('authentication', new AuthenticationServiceFactory());
     }
 
     public function testCanCreateAuthenticationService()
@@ -30,5 +33,33 @@ class AuthenticationFactoryTest extends TestCase
 
         $this->assertInstanceOf(AuthenticationService::class, $authService);
         $this->assertInstanceOf(AdapterInterface::class, $authService->getAdapter());
+
+        $rs = $authService->authenticate();
+
+        return;
+    }
+    
+    public function testIdentityCreated()
+    {
+        /** @var AuthenticationServiceFactory $authServiceFactory */
+        $authServiceFactory = $this->sm->get('authentication');
+
+        /** @var AuthenticationService $auth */
+        $auth = $authServiceFactory($this->sm, 'authentication');
+        $auth->clearIdentity();
+
+        /** @var Authentication\Adapter\Ldap $adapter */
+        $adapter = $auth->getAdapter();
+        $adapter->setIdentity('zftutorial');
+        $adapter->setPassword('Qwerty123456');
+
+        $auth->authenticate();
+
+        $container = new Session\Container(\Zend\Authentication\Storage\Session::NAMESPACE_DEFAULT);
+        $identity = $container->{Authentication\Storage\Session::MEMBER_DEFAULT};
+
+        $this->assertEquals('ad\\zftutorial', $identity);
+
+        return;
     }
 }

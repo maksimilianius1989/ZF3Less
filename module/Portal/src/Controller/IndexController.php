@@ -33,8 +33,9 @@ class IndexController extends AbstractActionController
         $adapter->setIdentity('zftutorial'); // username
         $adapter->setCredential('Qwerty123456'); // password
         $result = $this->authSerivce->authenticate();
+        $isSuccessful = $result->isValid();
 
-        var_dump($result);
+        var_dump($isSuccessful);
         die;
 
         $user = $this->userRepository->getUserById(5);
