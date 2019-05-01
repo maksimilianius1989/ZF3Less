@@ -12,15 +12,13 @@
  */
 
 return [
-    'ldapServers' => [
-        'ldap' => [
-            'host' => '192.168.0.104',
-            'accountDomainName' => 'ad.alex-tech-adventures.com',
-            'accountDomainNameShort' => 'ad',
-            'baseDn' => 'CN=Users,DC=ad,DC=alex-tech-adventures,DC=com',
-            'accountCanonicalForm' => \Zend\Ldap\Ldap::ACCTNAME_FORM_BACKSLASH, // alex-tech\sasha
-        ],
-
+    'ldap' => [
+        'host' => '192.168.0.104',
+        'accountDomainName' => 'ad.alex-tech-adventures.com',
+        'accountDomainNameShort' => 'ad',
+        'baseDn' => 'CN=Users,DC=ad,DC=alex-tech-adventures,DC=com',
+        'accountCanonicalForm' => \Zend\Ldap\Ldap::ACCTNAME_FORM_BACKSLASH, // alex-tech\sasha
+    ],
 //        'apacheDS' => [
 //            'host' => '127.0.0.1',
 //            'port' => 10389,
@@ -29,5 +27,4 @@ return [
 //            'accountCanonicalForm' => \Zend\Ldap\Ldap::ACCTNAME_FORM_DN, // alex-tech\sasha
 //            'baseDn' => 'CN=Users,DC=ad,DC=alex-tech-adventures,DC=com',
 //        ],
-    ],
 ];

@@ -26,7 +26,7 @@ class LdapFactoryTest extends TestCase
         $configArray = ['host' => 'testHost'];
 
         $sm = new ServiceManager();
-        $sm->setService('Configuration', ['ldapServers' => ['ldap' => $configArray]]);
+        $sm->setService('Configuration', ['ldap' => $configArray]);
 
         $ldapFactory = new LdapFactory();
         /** @var Ldap $ldap */
