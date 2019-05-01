@@ -7,9 +7,11 @@
 
 namespace Portal;
 
+use Zend\Authentication\AuthenticationService;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\Mvc\MvcEvent;
 
 class Module implements ConfigProviderInterface, BootstrapListenerInterface
 {
@@ -20,14 +22,22 @@ class Module implements ConfigProviderInterface, BootstrapListenerInterface
         return include __DIR__ . '/../config/module.config.php';
     }
 
-    /**
-     * Listen to the bootstrap event
-     *
-     * @param EventInterface $e
-     * @return array
-     */
     public function onBootstrap(EventInterface $e)
     {
-        return [];
+        /** @var MvcEvent $e */
+        $application = $e->getApplication();
+        $application->getEventManager()->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $e) use ($application) {
+            /** @var AuthenticationService $authService */
+            $authService = $application->getServiceManager()->get('authentication');
+
+            $hasIdentity = $authService->hasIdentity();
+            $identity = $authService->getIdentity();
+
+            var_dump($hasIdentity);
+            var_dump($identity);
+            return;
+        }, 100);
+
+        return;
     }
 }
