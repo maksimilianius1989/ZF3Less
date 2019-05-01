@@ -24,7 +24,7 @@ services:
     environment:
       - "DB_PORT=3306"
       - "DB_HOST=mysql"
-      - "XDEBUG_CONFIG=remote_host=192.168.0.102"
+      - "XDEBUG_CONFIG=remote_host=192.168.0.103"
 
   php-cli:
     build:

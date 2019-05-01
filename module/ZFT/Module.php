@@ -10,6 +10,7 @@ namespace ZFT;
 
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ServiceManager\Factory\InvokableFactory;
+use ZFT\Authentication\AuthenticationServiceFactory;
 use ZFT\User\MemoryIdentityMap;
 use ZFT\User\MysqlDataMapper;
 use ZFT\User\Repository as UserRepository;
@@ -31,6 +32,7 @@ class Module implements ServiceProviderInterface
                 MemoryIdentityMap::class => InvokableFactory::class,
 
                 UserRepository::class => RepositoryFactory::class,
+                'authentication' => AuthenticationServiceFactory::class,
             ],
         ];
     }
