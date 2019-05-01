@@ -35,9 +35,6 @@ class IndexController extends AbstractActionController
         $result = $this->authSerivce->authenticate();
         $isSuccessful = $result->isValid();
 
-        var_dump($isSuccessful);
-        die;
-
         $user = $this->userRepository->getUserById(5);
 
         return new ViewModel();

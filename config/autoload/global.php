@@ -13,8 +13,8 @@
 
 return [
     'ldapServers' => [
-        'mainDC' => [
-            'host' => '192.168.0.102',
+        'ldap' => [
+            'host' => '192.168.0.104',
             'accountDomainName' => 'ad.alex-tech-adventures.com',
             'accountDomainNameShort' => 'ad',
             'baseDn' => 'CN=Users,DC=ad,DC=alex-tech-adventures,DC=com',
