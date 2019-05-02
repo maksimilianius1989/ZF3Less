@@ -12,6 +12,13 @@
  */
 
 return [
+    'db' => [
+        'hostname' => 'db',
+        'driver' => 'Pgsql',
+        'database' => 'dbname',
+        'username' => 'dbuser',
+        'password' => 'dbpwd',
+    ],
     'ldap' => [
         'host' => '192.168.0.104',
         'accountDomainName' => 'ad.alex-tech-adventures.com',

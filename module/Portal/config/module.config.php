@@ -33,6 +33,18 @@ return [
                         'action' => 'index',
                     ],
                 ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'dbtools' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/db',
+                            'defaults' => [
+                                'needsDatabase' => false,
+                            ],
+                        ],
+                    ],
+                ],
             ],
             'application' => [
                 'type'    => Segment::class,
