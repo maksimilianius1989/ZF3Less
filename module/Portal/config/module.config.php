@@ -7,6 +7,7 @@
 
 namespace Portal;
 
+use Portal\Controller;
 use Portal\Controller\UserRelatedControllerFactory;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -29,7 +30,7 @@ return [
                 'options' => [
                     'route' => '/admin',
                     'defaults' => [
-                        'controller' => 'AdminController',
+                        'controller' => Controller\AdminController::class,
                         'action' => 'index',
                     ],
                 ],
@@ -61,7 +62,7 @@ return [
     'controllers' => [
         'factories' => [
             Controller\IndexController::class => UserRelatedControllerFactory::class,
-            'AdminController' => UserRelatedControllerFactory::class,
+            Controller\AdminController::class => UserRelatedControllerFactory::class,
         ],
     ],
     'view_manager' => [

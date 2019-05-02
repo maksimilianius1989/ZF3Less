@@ -14,6 +14,7 @@ use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\Factory\InvokableFactory;
 use ZFT\Authentication\AuthenticationServiceFactory;
 use ZFT\Connections\LdapFactory;
+use ZFT\Migrations\Migrations;
 use ZFT\User\MemoryIdentityMap;
 use ZFT\User\MysqlDataMapper;
 use ZFT\User\Repository as UserRepository;

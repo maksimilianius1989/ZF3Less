@@ -20,7 +20,7 @@ return [
         'password' => 'dbpwd',
     ],
     'ldap' => [
-        'host' => '192.168.0.104',
+        'host' => '192.168.0.101',
         'accountDomainName' => 'ad.alex-tech-adventures.com',
         'accountDomainNameShort' => 'ad',
         'baseDn' => 'CN=Users,DC=ad,DC=alex-tech-adventures,DC=com',

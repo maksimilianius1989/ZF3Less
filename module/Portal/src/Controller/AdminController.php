@@ -2,10 +2,11 @@
 
 namespace Portal\Controller;
 
+use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use ZFT\User;
 
-class AdminController
+class AdminController extends AbstractActionController
 {
     /** @var User\Repository */
     private $userRepository;
