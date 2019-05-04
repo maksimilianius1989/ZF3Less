@@ -3,7 +3,6 @@
 namespace Portal\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
 use ZFT\Migrations\Migrations;
 
 class AdminController extends AbstractActionController

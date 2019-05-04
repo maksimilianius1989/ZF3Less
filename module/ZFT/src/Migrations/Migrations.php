@@ -15,8 +15,9 @@ use Zend\Db\Sql\Where;
 
 class Migrations
 {
-    const MINIMUM_SCHEMA_VERSION = 2;
+    const MINIMUM_SCHEMA_VERSION = 1;
     const INI_TABLE = 'ini-dev';
+    const SCHEMA_OPTION_NAME = 'ZftSchemaVersion';
 
     /** @var Adapter */
     private $adapter;
@@ -44,7 +45,8 @@ class Migrations
         $sql = new Sql($this->adapter);
         $sqlString = $sql->buildSqlString($ddl);
 
-        $this->adapter->query($sqlString, Adapter::QUERY_MODE_PREPARE);
+        $result =  $this->adapter->query($sqlString, Adapter::QUERY_MODE_PREPARE);
+        $result->execute();
     }
     
     private function getVersion()
@@ -62,7 +64,7 @@ class Migrations
         $sql = new Sql($this->adapter);
         $select = $sql->select();
         $select->from(self::INI_TABLE);
-        $select->where(['option' => 'ZftSchemaVersion']);
+        $select->where(['option' => self::SCHEMA_OPTION_NAME]);
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
@@ -104,7 +106,7 @@ class Migrations
         $schemaVersionUpdate->set(['value' => $version]);
 
         $schemaVersionRow = new Where();
-        $schemaVersionRow->equalTo('optoin', 'ZftSchemaVersion');
+        $schemaVersionRow->equalTo('optoin', self::SCHEMA_OPTION_NAME);
 
         $schemaVersionStatement = $sql->prepareStatementForSqlObject($schemaVersionUpdate);
         $schemaVersionStatement->execute();
@@ -126,7 +128,7 @@ class Migrations
         $insertInitialVersion = $sql->insert();
         $insertInitialVersion->into(self::INI_TABLE);
         $value = [
-            'option' => 'ZftSchemaVersion',
+            'option' => self::SCHEMA_OPTION_NAME,
             'value' => 1,
         ];
         $insertInitialVersion->columns(array_keys($value));
