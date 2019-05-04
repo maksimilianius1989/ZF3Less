@@ -7,6 +7,9 @@ use Zend\Db\Adapter\Platform\PlatformInterface;
 use Zend\Db\Metadata\MetadataInterface;
 use Zend\Db\Metadata\Object\TableObject;
 use Zend\Db\Metadata\Source\Factory as MetadataFactory;
+use Zend\Db\Sql\Ddl\Column\Varchar;
+use Zend\Db\Sql\Ddl\CreateTable;
+use Zend\Db\Sql\Ddl\SqlInterface;
 use Zend\Db\Sql\Sql;
 
 class Migrations
@@ -35,6 +38,14 @@ class Migrations
         return ($this->getVersion() < self::MINIMUM_SCHEMA_VERSION);
     }
 
+    public function execute(SqlInterface $ddl)
+    {
+        $sql = new Sql($this->adapter);
+        $sqlString = $sql->buildSqlString($ddl);
+
+        $this->adapter->query($sqlString, Adapter::QUERY_MODE_PREPARE);
+    }
+    
     private function getVersion()
     {
         $tables = $this->metadata->getTables();
@@ -63,5 +74,18 @@ class Migrations
         $version = $result['value'];
 
         return $version;
+    }
+    
+    protected function update1_001 ()
+    {
+        $iniTable = new CreateTable('ini');
+
+        $option = new Varchar('option');
+        $value = new Varchar('value');
+
+        $iniTable->addColumn($option);
+        $iniTable->addColumn($value);
+
+        $this->execute($iniTable);
     }
 }
