@@ -87,5 +87,18 @@ class Migrations
         $iniTable->addColumn($value);
 
         $this->execute($iniTable);
+
+        $sql = new Sql($this->adapter);
+        $insertInitialVersion = $sql->insert();
+        $insertInitialVersion->into(self::INI_TABLE);
+        $value = [
+            'option' => 'ZftSchemaVersion',
+            'value' => 1,
+        ];
+        $insertInitialVersion->columns(array_column($value));
+        $insertInitialVersion->values(array_values($value));
+
+        $insertStatement = $sql->prepareStatementForSqlObject($insertInitialVersion);
+        $insertStatement->execute();
     }
 }
