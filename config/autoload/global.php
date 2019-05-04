@@ -14,7 +14,7 @@
 return [
     'db' => [
         'hostname' => 'db',
-        'driver' => 'Pgsql',
+        'driver' => 'Pdo_Pgsql',
         'database' => 'dbname',
         'username' => 'dbuser',
         'password' => 'dbpwd',

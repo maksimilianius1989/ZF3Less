@@ -33,6 +33,7 @@ class Module implements ServiceProviderInterface
                 $adapter = $sm->get('dbcon');
 
                 $migration = new Migrations($adapter);
+                $migration->needsUpdate();
             }
         }, 100);
     }
