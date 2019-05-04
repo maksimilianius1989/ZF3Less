@@ -15,8 +15,8 @@ use Zend\Db\Sql\Where;
 
 class Migrations
 {
-    const MINIMUM_SCHEMA_VERSION = 1;
-    const INI_TABLE = 'ini';
+    const MINIMUM_SCHEMA_VERSION = 2;
+    const INI_TABLE = 'ini-dev';
 
     /** @var Adapter */
     private $adapter;

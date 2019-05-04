@@ -44,6 +44,19 @@ return [
                                 'needsDatabase' => false,
                             ],
                         ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'runmigrations' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                'route' => '/runmigrations',
+                                    'defaults' => [
+                                        'needsDatabase' => false,
+                                        'action' => 'runmigrations',
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -62,7 +75,7 @@ return [
     'controllers' => [
         'factories' => [
             Controller\IndexController::class => UserRelatedControllerFactory::class,
-            Controller\AdminController::class => UserRelatedControllerFactory::class,
+            Controller\AdminController::class => Controller\AdminControllerFactory::class,
         ],
     ],
     'view_manager' => [

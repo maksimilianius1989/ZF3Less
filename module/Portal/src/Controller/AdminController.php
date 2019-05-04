@@ -4,22 +4,27 @@ namespace Portal\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use ZFT\User;
+use ZFT\Migrations\Migrations;
 
 class AdminController extends AbstractActionController
 {
-    /** @var User\Repository */
-    private $userRepository;
+    /** @var Migrations */
+    private $migrations;
     
-    public function __construct(User\Repository $userRepository)
+    public function __construct(Migrations $migrations)
     {
-        $this->userRepository = $userRepository;
+        $this->migrations = $migrations;
     }
     
     public function indexAction()
     {
-        $user = $this->userRepository->getUserById(5);
-
-        return new ViewModel();
+        return [
+            'needsMigration' => $this->migrations->needsUpdate(),
+        ];
+    }
+    
+    public function runmigrationsAction()
+    {
+        $this->migrations->run();
     }
 }

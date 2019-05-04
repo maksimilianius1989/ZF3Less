@@ -1,1 +1,5 @@
-portal/index
+<?php if ($this->needsMigration): ?>
+    <a href="<?= $this->url('admin/dbtools/runmigrations') ?>">Run migrations</a>
+<?php else: ?>
+    Database is already up to date
+<?php endif; ?>

@@ -9,6 +9,7 @@ namespace Portal;
 
 use Zend\Authentication\AuthenticationService;
 use Zend\EventManager\EventInterface;
+use Zend\Http\PhpEnvironment\Response;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\Mvc\MvcEvent;
@@ -35,6 +36,24 @@ class Module implements ConfigProviderInterface, BootstrapListenerInterface
 
             return;
         }, 100);
+
+        $application->getEventManager()->attach(MvcEvent::EVENT_DISPATCH_ERROR, function (MvcEvent $event) {
+            $params = $event->getParams();
+
+            // @TODO better error handling
+            if (! (array_key_exists('needsDatabaseUpdate', $params) && $params['needsDatabaseUpdate'] === true)) return;
+
+            $router = $event->getRouter();
+            $url = $router->assemble([], ['admin/dbtools']);
+
+            /** @var Response $response */
+            $response = $event->getResponse();
+            $response->setStatusCode(302);
+            $response->getHeaders()->addHeaderLine('location', $url);
+            $response->sendHeaders();
+
+            return $response;
+        });
 
         return;
     }

@@ -27,13 +27,23 @@ class Module implements ServiceProviderInterface
         $application = $event->getApplication();
         $sm = $application->getServiceManager();
 
-        $application->getEventManager()->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $event) use ($sm) {
+        $em = $application->getEventManager();
+        $em->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $event) use ($sm, $em) {
             $router = $event->getRouteMatch();
             if (!($router->getParam('needsDatabase') === false)) {
                 $adapter = $sm->get('dbcon');
 
                 $migration = new Migrations($adapter);
-                $migration->needsUpdate();
+                if ($migration->needsUpdate()) {
+                    $event->setName(MvcEvent::EVENT_DISPATCH_ERROR);
+                    $event->setError('Database Needs Update');
+                    $event->setParam('needsDatabaseUpdate', true);
+
+                    $event->stopPropagation(true);
+                    $em->triggerEvent($event);
+
+                    return $event->getRequest();
+                }
             }
         }, 100);
     }
