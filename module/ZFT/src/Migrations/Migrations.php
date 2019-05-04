@@ -45,11 +45,10 @@ class Migrations
         $sql = new Sql($this->adapter);
         $sqlString = $sql->buildSqlString($ddl);
 
-        $result =  $this->adapter->query($sqlString, Adapter::QUERY_MODE_PREPARE);
-        $result->execute();
+        $result =  $this->adapter->query($sqlString, Adapter::QUERY_MODE_EXECUTE);
     }
     
-    private function getVersion()
+    protected function getVersion()
     {
         $tables = $this->metadata->getTables();
 
@@ -98,7 +97,7 @@ class Migrations
         return;
     }
     
-    private function setVersion($version)
+    protected function setVersion($version)
     {
         $sql = new Sql($this->adapter);
         $schemaVersionUpdate = $sql->update();
@@ -110,6 +109,11 @@ class Migrations
 
         $schemaVersionStatement = $sql->prepareStatementForSqlObject($schemaVersionUpdate);
         $schemaVersionStatement->execute();
+    }
+    
+    public function attach($eventName, callable $listener)
+    {
+
     }
     
     protected function update_001 ()
