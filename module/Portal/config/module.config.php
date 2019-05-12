@@ -10,7 +10,9 @@ namespace Portal;
 use Portal\Controller;
 use Portal\Controller\UserRelatedControllerFactory;
 use Zend\Router\Http\Literal;
+use Zend\Router\Http\Method;
 use Zend\Router\Http\Segment;
+use Zend\ServiceManager\Factory\InvokableFactory;
 
 return [
     'router' => [
@@ -22,6 +24,56 @@ return [
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
                         'action'     => 'index',
+                    ],
+                ],
+            ],
+            'profile' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/profile',
+                    'defaults' => [
+                        'controller' => Controller\ProfileController::class,
+                        'action' => 'view',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'view_profile' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/',
+                            'defaults' => [
+                                'controller' => Controller\ProfileController::class,
+                                'action' => 'view',
+                            ],
+                        ],
+                    ],
+                    'edit_profile' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/edit',
+                        ],
+                        'may_terminate' => false,
+                        'child_routes' => [
+                            'form_profile' => [
+                                'type' => Method::class,
+                                'options' => [
+                                    'verb' => 'get',
+                                    'defaults' => [
+                                        'action' => 'edit',
+                                    ],
+                                ],
+                            ],
+                            'submit_profile' => [
+                                'type' => Method::class,
+                                'options' => [
+                                    'verb' => 'post',
+                                    'defaults' => [
+                                        'action' => 'submit',
+                                    ]
+                                ]
+                            ]
+                        ],
                     ],
                 ],
             ],
@@ -76,6 +128,7 @@ return [
         'factories' => [
             Controller\IndexController::class => UserRelatedControllerFactory::class,
             Controller\AdminController::class => Controller\AdminControllerFactory::class,
+            Controller\ProfileController::class => InvokableFactory::class,
         ],
     ],
     'view_manager' => [
