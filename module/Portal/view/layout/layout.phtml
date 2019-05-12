@@ -1,3 +1,14 @@
+<?php
+
+use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Zend\View\Renderer\PhpRenderer;
+
+/**
+ * @var $this PhpRenderer
+ */
+
+?>
+
 <?= $this->doctype() ?>
 
 <html lang="en">
@@ -44,6 +55,21 @@
                 </div>
             </div>
         </nav>
+
+        <?php
+
+            echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_ERROR, ['alert', 'alert-danger']);
+
+            echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_INFO, ['alert', 'alert-info']);
+
+            echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_SUCCESS, ['alert', 'alert-success']);
+
+            echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_WARNING, ['alert', 'alert-warning']);
+
+            echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_DEFAULT, ['alert', 'alert-info']);
+
+        ?>
+
         <div class="container">
             <?= $this->content ?>
             <hr>
