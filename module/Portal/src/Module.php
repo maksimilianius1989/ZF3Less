@@ -44,7 +44,7 @@ class Module implements ConfigProviderInterface, BootstrapListenerInterface
             if (! (array_key_exists('needsDatabaseUpdate', $params) && $params['needsDatabaseUpdate'] === true)) return;
 
             $router = $event->getRouter();
-            $url = $router->assemble([], ['admin/dbtools']);
+            $url = $router->assemble([], ['name' => 'admin/dbtools']);
 
             /** @var Response $response */
             $response = $event->getResponse();
