@@ -60,15 +60,15 @@ use Zend\View\Renderer\PhpRenderer;
 
             <?php
 
-            echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_ERROR, ['alert', 'alert-danger']);
+            echo $this->flashMessenger()->renderCurrent(FlashMessenger::NAMESPACE_ERROR, ['alert', 'alert-danger']);
 
-            echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_INFO, ['alert', 'alert-info']);
+            echo $this->flashMessenger()->renderCurrent(FlashMessenger::NAMESPACE_INFO, ['alert', 'alert-info']);
 
-            echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_SUCCESS, ['alert', 'alert-success']);
+            echo $this->flashMessenger()->renderCurrent(FlashMessenger::NAMESPACE_SUCCESS, ['alert', 'alert-success']);
 
-            echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_WARNING, ['alert', 'alert-warning']);
+            echo $this->flashMessenger()->renderCurrent(FlashMessenger::NAMESPACE_WARNING, ['alert', 'alert-warning']);
 
-            echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_DEFAULT, ['alert', 'alert-info']);
+            echo $this->flashMessenger()->renderCurrent(FlashMessenger::NAMESPACE_DEFAULT, ['alert', 'alert-info']);
 
             ?>
 
