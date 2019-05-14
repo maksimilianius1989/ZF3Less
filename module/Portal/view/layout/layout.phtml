@@ -56,7 +56,9 @@ use Zend\View\Renderer\PhpRenderer;
             </div>
         </nav>
 
-        <?php
+        <div class="container">
+
+            <?php
 
             echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_ERROR, ['alert', 'alert-danger']);
 
@@ -68,9 +70,8 @@ use Zend\View\Renderer\PhpRenderer;
 
             echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_DEFAULT, ['alert', 'alert-info']);
 
-        ?>
+            ?>
 
-        <div class="container">
             <?= $this->content ?>
             <hr>
             <footer>
