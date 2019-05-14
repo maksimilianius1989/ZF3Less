@@ -9,10 +9,13 @@ namespace Portal;
 
 use Zend\Authentication\AuthenticationService;
 use Zend\EventManager\EventInterface;
+use Zend\Http\Header\Cookie;
+use Zend\Http\Header\SetCookie;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\Mvc\MvcEvent;
+use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 
 class Module implements ConfigProviderInterface, BootstrapListenerInterface
 {
@@ -27,6 +30,7 @@ class Module implements ConfigProviderInterface, BootstrapListenerInterface
     {
         /** @var MvcEvent $e */
         $application = $e->getApplication();
+        $sm = $application->getServiceManager();
         $application->getEventManager()->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $e) use ($application) {
             /** @var AuthenticationService $authService */
             $authService = $application->getServiceManager()->get('authentication');
@@ -53,6 +57,31 @@ class Module implements ConfigProviderInterface, BootstrapListenerInterface
             $response->sendHeaders();
 
             return $response;
+        });
+
+        $application->getEventManager()->attach(MvcEvent::EVENT_DISPATCH_ERROR, function (MvcEvent $event) use ($sm) {
+            $ctrlPluginManager = $sm->get('ControllerPluginManager');
+            /** @var FlashMessenger $flashMessenger */
+            $flashMessenger = $ctrlPluginManager->get(FlashMessenger::class);
+            $messageContainer = $flashMessenger->getContainer();
+            $warningContainer = $messageContainer->offsetGet(FlashMessenger::NAMESPACE_WARNING);
+
+            /** @var Cookie $coockies */
+            $coockies = $event->getRequest()->getCookie();
+            if (! isset($coockies['warningRemoveQueue'])) return;
+
+            $warningRemoveQueue = $coockies['warningRemoveQueue'];
+            $warningRemoveQueue = array_filter(explode(',', $warningRemoveQueue), 'strlen');
+            $warningRemoveQueue = array_map('intval', $warningRemoveQueue);
+            rsort($warningRemoveQueue);
+            
+            foreach ($warningRemoveQueue as $messageIndex) {
+                if (! isset($warningContainer[$messageIndex])) continue;
+                $warningContainer->offsetUnset($messageIndex);
+            }
+
+            $unsetCookie = new SetCookie('warningRemoveQueue', '', strtotime('-1 Year'), '/');
+            $event->getResponse()->getHeaders()->addHeader($unsetCookie);
         });
 
         return;
