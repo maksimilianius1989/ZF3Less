@@ -19,5 +19,6 @@ return [
     'Zend\Router',
     'Zend\Validator',
     'ZFT',
+    'Admin',
     'Portal',
 ];

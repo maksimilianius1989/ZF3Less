@@ -2,6 +2,8 @@
 
 namespace ZFT\Migrations;
 
+use Faker\Generator;
+use Faker\Provider\ru_RU\Person;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Adapter\Platform\PlatformInterface;
 use Zend\Db\Metadata\MetadataInterface;
@@ -109,7 +111,7 @@ class Migrations {
             $update = $updates[$v];
             $this->{$update}();
 
-            $this->setVersion($v);
+//            $this->setVersion($v);
         }
 
         return;
@@ -164,4 +166,37 @@ class Migrations {
         $insertStatement->execute();
     }
 
+    protected function update_002 ()
+    {
+        //        $usersTable = new Ddl\CreateTable('users');
+//        $id = new Ddl\Column\Integer('id');
+//        $firstName= new Ddl\Column\Varchar('first_name');
+//        $surName = new Ddl\Column\Varchar('surname');
+//        $patronymic = new Ddl\Column\Varchar('patronymic');
+//
+//        $email = new Ddl\Column\Varchar('email');
+//
+//        $usersTable->addColumn($id);
+//        $usersTable->addColumn($firstName);
+//        $usersTable->addColumn($surName);
+//        $usersTable->addColumn($patronymic);
+//        $this->execute($usersTable);
+//
+//        $insert = new Insert('users');
+//        $insert->columns(['id', 'first_name', 'surname', 'patronymic']);
+
+        $faker = new Generator();
+        $faker->addProvider(new Person($faker));
+        for ($i = 0; $i < 10; $i++) {
+
+//            $insert->values([
+//                'id' => $i,
+//                'first_name' =>$faker->firstName,
+//                'surname' => $faker->lastName,
+//                'patronymic' => $faker->middleName]);
+            $n = $faker->name;
+
+            $v = 1;
+        }
+    }
 }

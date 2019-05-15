@@ -5,10 +5,17 @@ namespace Portal\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 
+/**
+ * @method FlashMessenger flashMessenger()
+ */
+
 class ProfileController extends AbstractActionController {
 
     public function viewAction() {
-        // view profile
+        $flashMessenger = $this->flashMessenger();
+
+        $flashMessenger->addMessage('Уроки должны быть по русски', FlashMessenger::NAMESPACE_WARNING, 100);
+        $flashMessenger->addMessage('Это сообщение нужно удалить.', FlashMessenger::NAMESPACE_WARNING, 100);
     }
 
     public function editAction() {

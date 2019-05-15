@@ -1,0 +1,5 @@
+<?php if ($this->needsMigration): ?>
+    <a href="<?= $this->url('admin/dbtools/runmigrations') ?>">Выполнить миграции</a>
+<?php else: ?>
+    Схема базы данных уже обновлена
+<?php endif; ?>
