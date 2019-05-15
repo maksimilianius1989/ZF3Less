@@ -1,14 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: vimax
- * Date: 20.04.19
- * Time: 16:35
- */
 
 namespace ZFT;
 
 use Zend\Db\Adapter\AdapterInterface;
+use Zend\EventManager\Event;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\Factory\InvokableFactory;
@@ -16,59 +11,52 @@ use ZFT\Authentication\AuthenticationServiceFactory;
 use ZFT\Connections\LdapFactory;
 use ZFT\Migrations\Migrations;
 use ZFT\User\MemoryIdentityMap;
-use ZFT\User\MysqlDataMapper;
+use ZFT\User\PostgresDataMapper;
 use ZFT\User\Repository as UserRepository;
 use ZFT\User\RepositoryFactory;
 
-class Module implements ServiceProviderInterface
-{
-    public function onBootstrap(MvcEvent $event)
-    {
-        $application = $event->getApplication();
+class Module implements ServiceProviderInterface {
+
+    public function onBootstrap(MvcEvent $e) {
+        $application = $e->getApplication();
         $sm = $application->getServiceManager();
 
         $em = $application->getEventManager();
-        $em->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $event) use ($sm, $em) {
-            $router = $event->getRouteMatch();
-            if (!($router->getParam('needsDatabase') === false)) {
+        $em->attach(MvcEvent::EVENT_DISPATCH, function(MvcEvent $e) use ($sm, $em) {
+            $router = $e->getRouteMatch();
+            if(!($router->getParam('needsDatabase') === false)) {
                 $adapter = $sm->get('dbcon');
 
-                $migration = new Migrations($adapter);
-                if ($migration->needsUpdate()) {
-                    $event->setName(MvcEvent::EVENT_DISPATCH_ERROR);
-                    $event->setError('Database Needs Update');
-                    $event->setParam('needsDatabaseUpdate', true);
+                $migrations = new Migrations($adapter);
+                if($migrations->needsUpdate()) {
+                    $e->setName(MvcEvent::EVENT_DISPATCH_ERROR);
+                    $e->setError('База данных нуждается в обновлении.');
+                    $e->setParam('needsDatabaseUpdate', true);
 
-                    $event->stopPropagation(true);
-                    $em->triggerEvent($event);
+                    $e->stopPropagation(true);
+                    $em->triggerEvent($e);
 
-                    return $event->getRequest();
+                    return $e->getResult();
                 }
             }
         }, 100);
     }
-    
-    /**
-     * Expected to return \Zend\ServiceManager\Config object or array to
-     * seed such an object.
-     *
-     * @return array|\Zend\ServiceManager\Config
-     */
-    public function getServiceConfig()
-    {
+
+    public function getServiceConfig() {
         return [
             'factories' => [
-                MysqlDataMapper::class => InvokableFactory::class,
+                PostgresDataMapper::class => InvokableFactory::class,
                 MemoryIdentityMap::class => InvokableFactory::class,
 
                 UserRepository::class => RepositoryFactory::class,
                 'authentication' => AuthenticationServiceFactory::class,
 
-                'ldap' => LdapFactory::class,
+                'ldap' => LdapFactory::class
             ],
             'aliases' => [
-                'dbcon' => AdapterInterface::class,
-            ],
+                'dbcon' => AdapterInterface::class
+            ]
         ];
     }
+
 }

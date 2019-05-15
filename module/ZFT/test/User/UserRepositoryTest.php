@@ -1,26 +1,36 @@
 <?php
 
-namespace ZFTTest\User;
+namespace ZFTest\User;
 
-use PHPUnit\Framework\TestCase;
-use ZFT\User\DataMapperInterface;
-use ZFT\User\IdentityMapInterface;
-use ZFT\User\Repository as UserRepository;
+use ZFT\User;
 
-class UserRepositoryTest extends TestCase
-{
-    public function testCanCreateUserRepositoryObject()
-    {
-        $identityMapStup = new class() implements IdentityMapInterface {
+/** PHP 5 version
+class IdentityMapStub implements User\IdentityMapInterface {
+
+}
+
+class DataMapperStub implements User\DataMapperInterface {
+
+}
+*/
+
+class UserRepositoryTest extends \PHPUnit_Framework_TestCase {
+    public function testCanCreateUserRepositoryObject() {
+        /* PHP 5 version
+        $identityMapStub = new IdentityMapStub();
+        $dataMapperStub = new DataMapperStub();
+        */
+
+        $identityMapStub = new class() implements User\IdentityMapInterface {
 
         };
 
-        $dataMapperStup = new class() implements DataMapperInterface {
+        $dataMapperStub = new class() implements User\DataMapperInterface {
 
         };
 
-        $repository = new UserRepository($identityMapStup, $dataMapperStup);
+        $repository = new User\Repository($identityMapStub, $dataMapperStub);
 
-        $this->assertInstanceOf(UserRepository::class, $repository);
+        $this->assertInstanceOf(User\Repository::class, $repository);
     }
 }

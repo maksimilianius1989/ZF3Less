@@ -2,17 +2,12 @@
 
 namespace ZFT\User;
 
-use ZFT\User;
+class Repository {
+    function __construct(IdentityMapInterface $identityMap, DataMapperInterface $dataMapper) {
 
-class Repository
-{
-    public function __construct(IdentityMapInterface $identityMap, DataMapperInterface $dataMapper)
-    {
-        
     }
 
-    public function getUserById($id)
-    {
+    public function getUserById($id) {
         return new User();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace ZFT\User;
 
-interface IdentityMapInterface
-{
+interface IdentityMapInterface {
 
 }
+

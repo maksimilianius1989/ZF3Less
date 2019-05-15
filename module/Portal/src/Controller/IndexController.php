@@ -15,25 +15,28 @@ use ZFT\User;
 
 class IndexController extends AbstractActionController
 {
-    /** @var User\Repository */
-    private $userRepository;
-    /** @var AuthenticationService */
-    private $authSerivce;
 
-    public function __construct(User\Repository $userRepository, AuthenticationService $authService)
-    {
+    /** @var  User\Repository */
+    private $userRepository;
+
+    /** @var  AuthenticationService */
+    private $authService;
+
+    public function __construct(User\Repository $userRepository, AuthenticationService $authService) {
         $this->userRepository = $userRepository;
-        $this->authSerivce = $authService;
+        $this->authService = $authService;
     }
 
     public function indexAction()
     {
         /** @var Ldap $adapter */
-        $adapter = $this->authSerivce->getAdapter();
+        $adapter = $this->authService->getAdapter();
         $adapter->setIdentity('zftutorial'); // username
-        $adapter->setCredential('Qwerty123456'); // password
-        $result = $this->authSerivce->authenticate();
+        $adapter->setCredential('ZFT2016!'); // password
+        $result = $this->authService->authenticate();
         $isSuccessful = $result->isValid();
+
+//        $user = new User();
 
         $user = $this->userRepository->getUserById(5);
 

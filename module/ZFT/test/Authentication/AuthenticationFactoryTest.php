@@ -1,33 +1,30 @@
 <?php
+namespace ZFTest\Authentication;
 
-namespace ZFTTest\Authentication;
 
-use PHPUnit\Framework\TestCase;
+use Zend\Authentication;
 use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\ServiceManager;
-use ZFT\Authentication\AuthenticationServiceFactory;
 use Zend\Session;
-use Zend\Authentication;
+use ZFT\Authentication\AuthenticationServiceFactory;
 use ZFT\Connections\LdapFactory;
 
-class AuthenticationFactoryTest extends TestCase
-{
-    /** @var ServiceManager */
+class AuthenticationFactoryTest extends \PHPUnit_Framework_TestCase {
+
+    /** @var  ServiceManager */
     private $sm;
-    
-    public function setUp()
-    {
+
+    public function setUp() {
         parent::setUp();
 
         $this->sm = new ServiceManager();
-        $this->sm->setService('Configuration', require __DIR__ . '/../../../../config/autoload/global.php');
+        $this->sm->setService('Configuration', require __DIR__.'/../../../../config/autoload/global.php');
         $this->sm->setService('authentication', new AuthenticationServiceFactory());
         $this->sm->setFactory('ldap', LdapFactory::class);
     }
 
-    public function testCanCreateAuthenticationService()
-    {
+    public function testCanCreateAuthenticationService() {
         $authServiceFactory = new AuthenticationServiceFactory();
 
         /** @var AuthenticationService $authService */
@@ -40,9 +37,8 @@ class AuthenticationFactoryTest extends TestCase
 
         return;
     }
-    
-    public function testIdentityCreated()
-    {
+
+    public function testIdentityCreated() {
         /** @var AuthenticationServiceFactory $authServiceFactory */
         $authServiceFactory = $this->sm->get('authentication');
 
@@ -53,15 +49,16 @@ class AuthenticationFactoryTest extends TestCase
         /** @var Authentication\Adapter\Ldap $adapter */
         $adapter = $auth->getAdapter();
         $adapter->setIdentity('zftutorial');
-        $adapter->setPassword('Qwerty123456');
+        $adapter->setPassword('ZFT2016!');
 
         $auth->authenticate();
 
-        $container = new Session\Container(\Zend\Authentication\Storage\Session::NAMESPACE_DEFAULT);
+        $container = new Session\Container(Authentication\Storage\Session::NAMESPACE_DEFAULT);
         $identity = $container->{Authentication\Storage\Session::MEMBER_DEFAULT};
 
-        $this->assertEquals('ad\\zftutorial', $identity);
+        $this->assertEquals('alex-tech\\zftutorial', $identity);
 
         return;
     }
+
 }

@@ -2,7 +2,7 @@
 
 namespace ZFT\User;
 
-interface DataMapperInterface
-{
+interface DataMapperInterface {
 
 }
+

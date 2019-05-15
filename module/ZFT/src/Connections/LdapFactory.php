@@ -3,39 +3,31 @@
 namespace ZFT\Connections;
 
 use Interop\Container\ContainerInterface;
-use Interop\Container\Exception\ContainerException;
 use Zend\Ldap\Ldap;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
-class LdapFactory implements FactoryInterface
-{
-
+class LdapFactory implements FactoryInterface {
     /**
-     * Create an object
-     *
-     * @param  ContainerInterface $sm
-     * @param  string $requestedName
-     * @param  null|array $options
-     * @return object
+     * @param ContainerInterface $sm
+     * @param string $requestedName
+     * @param array|null|null $options
      * @throws ServiceNotCreatedException if an exception is raised when
      *     creating a service.
-     * @throws ContainerException if any other error occurs
-     * @throws \Zend\Ldap\Exception\LdapException
+     * @return mixed
      */
-    public function __invoke(ContainerInterface $sm, $requestedName, array $options = null)
-    {
+    public function __invoke(ContainerInterface $sm, $requestedName, array $options = null) {
         $config = $sm->get('Configuration');
 
-        if (!array_key_exists('ldap', $config)) {
-            throw new ServiceNotCreatedException('Configuration is missing "ldap" key');
+        if(!array_key_exists('ldap', $config)) {
+            throw new ServiceNotCreatedException('В конфигурации отсутствует ключ "ldap"');
         }
 
         $config = $config['ldap'];
 
         $ldap = new Ldap();
         $ldap->setOptions($config);
-
         return $ldap;
     }
+
 }

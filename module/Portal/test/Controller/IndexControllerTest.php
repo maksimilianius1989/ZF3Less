@@ -5,7 +5,7 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace PortalTest\Controller;
+namespace ApplicationTest\Controller;
 
 use Portal\Controller\IndexController;
 use Zend\Stdlib\ArrayUtils;

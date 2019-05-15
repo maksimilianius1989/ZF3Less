@@ -2,7 +2,6 @@
 
 namespace ZFT\User;
 
-class MemoryIdentityMap implements IdentityMapInterface
-{
+class MemoryIdentityMap implements IdentityMapInterface {
 
 }

@@ -7,33 +7,29 @@ use Zend\Db\Adapter\Platform\PlatformInterface;
 use Zend\Db\Metadata\MetadataInterface;
 use Zend\Db\Metadata\Object\TableObject;
 use Zend\Db\Metadata\Source\Factory as MetadataFactory;
-use Zend\Db\Sql\Ddl\Column\Varchar;
-use Zend\Db\Sql\Ddl\CreateTable;
-use Zend\Db\Sql\Ddl\SqlInterface;
 use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Ddl;
 use Zend\Db\Sql\Where;
 use Zend\EventManager\EventManager;
 
-class Migrations
-{
-    const MINIMUM_SCHEMA_VERSION = 1;
-    const INI_TABLE = 'ini-dev';
-    const SCHEMA_OPTION_NAME = 'ZftSchemaVersion';
+class Migrations {
 
-    /** @var Adapter */
+    const MINIMUM_SCHEMA_VERSION = 1;
+    const INI_TABLE = 'ini';
+
+    /** @var  Adapter */
     private $adapter;
 
-    /** @var PlatformInterface */
+    /** @var  PlatformInterface */
     private $platform;
 
-    /** @var MetadataInterface */
+    /** @var  MetadataInterface */
     private $metadata;
 
-    /** @var EventManager */
+    /** @var  EventManager */
     private $eventManager;
 
-    public function __construct(Adapter $adapter)
-    {
+    public function __construct(Adapter $adapter) {
         $this->adapter = $adapter;
         $this->platform = $adapter->getPlatform();
         $this->metadata = MetadataFactory::createSourceFromAdapter($adapter);
@@ -41,22 +37,19 @@ class Migrations
         $this->eventManager = new EventManager();
     }
 
-    public function needsUpdate()
-    {
+    public function needsUpdate() {
         return ($this->getVersion() < self::MINIMUM_SCHEMA_VERSION);
     }
 
-    public function execute(SqlInterface $ddl)
-    {
+    private function execute(Ddl\SqlInterface $ddl) {
         $sql = new Sql($this->adapter);
         $sqlString = $sql->buildSqlString($ddl);
 
-        $result =  $this->adapter->query($sqlString, Adapter::QUERY_MODE_EXECUTE);
+        $this->adapter->query($sqlString, Adapter::QUERY_MODE_EXECUTE);
     }
-    
-    protected function getVersion()
-    {
-        $tables = $this->metadata->getTables();
+
+    protected function getVersion() {
+        $tables = $this->metadata->getTables('public');
 
         $iniTable = array_filter($tables, function (TableObject $table) {
             return strcmp($table->getName(), self::INI_TABLE) === 0;
@@ -69,41 +62,50 @@ class Migrations
         $sql = new Sql($this->adapter);
         $select = $sql->select();
         $select->from(self::INI_TABLE);
-        $select->where(['option' => self::SCHEMA_OPTION_NAME]);
+        $select->where(['option' => 'ZftSchemaVersion']);
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
         $result = $result->current();
         $version = $result['value'];
 
-        return $version;
-    }
-    
-    public function run()
-    {
-        $migrationStartEvent = new MigrationsEvent();
-        $migrationStartEvent->setName(MigrationsEvent::MIGRATIONS_START);
-        $migrationStartEvent->setTarget($this);
-        $migrationStartParams['to'] = $this->getTargetVersion();
 
-        $migrationClass = new \ReflectionClass(Migrations::class);
-        $methods = $migrationClass->getMethods(\ReflectionMethod::IS_PROTECTED);
+//        $sql = 'SELECT value '.
+//        'FROM '.$this->platform->quoteIdentifier(self::INI_TABLE)." ".
+//        'WHERE '.$this->platform->quoteIdentifier('option').' = :option';
+
+//        $result = $this->adapter->query($sql, ['option' => 'ZftSchemaVersion']);
+//        $result = $result->toArray();
+//        $version = $result[0]['value'];
+
+        return $version;
+
+    }
+
+    public function run() {
+        $migrationsStartEvent = new MigrationsEvent();
+        $migrationsStartEvent->setName(MigrationsEvent::MIGRATIONS_START);
+        $migrationsStartEvent->setTarget($this);
+        $migrationsStartParams['to'] = $this->getTargetVersion();
+
+        $migrationCalss = new \ReflectionClass(Migrations::class);
+        $methods = $migrationCalss->getMethods(\ReflectionMethod::IS_PROTECTED);
 
         $updates = [];
-        array_walk($methods, function (\ReflectionMethod $method) use (&$updates) {
-            $version = (int) substr($method->getName(), strpos($method->getName(), '_') + 1);
+        array_walk($methods, function(\ReflectionMethod $method) use (&$updates) {
+            $version = substr($method->getName(), strpos($method->getName(), '_')+1);
+            $version = (int) $version;
             $updates[$version] = $method->getName();
         });
 
         ksort($updates);
 
-
         $currentVersion = (int) $this->getVersion();
-        $migrationStartParams['from'] = $currentVersion;
-        $migrationStartEvent->setParams($migrationStartParams);
-        $this->eventManager->triggerEvent($migrationStartEvent);
+        $migrationsStartParams['from'] = $currentVersion;
+        $migrationsStartEvent->setParams($migrationsStartParams);
+        $this->eventManager->triggerEvent($migrationsStartEvent);
 
-        for ($v = $currentVersion + 1; $v <= self::MINIMUM_SCHEMA_VERSION; $v++) {
+        for($v = $currentVersion+1; $v <= self::MINIMUM_SCHEMA_VERSION; $v++) {
             $update = $updates[$v];
             $this->{$update}();
 
@@ -112,37 +114,34 @@ class Migrations
 
         return;
     }
-    
-    protected function getTargetVersion ()
-    {
+
+    protected function getTargetVersion() {
         return self::MINIMUM_SCHEMA_VERSION;
     }
-    
-    protected function setVersion($version)
-    {
+
+    protected function setVersion($version){
         $sql = new Sql($this->adapter);
         $schemaVersionUpdate = $sql->update();
         $schemaVersionUpdate->table(self::INI_TABLE);
         $schemaVersionUpdate->set(['value' => $version]);
 
         $schemaVersionRow = new Where();
-        $schemaVersionRow->equalTo('optoin', self::SCHEMA_OPTION_NAME);
+        $schemaVersionRow->equalTo('option', 'ZftSchemaVersion');
 
         $schemaVersionStatement = $sql->prepareStatementForSqlObject($schemaVersionUpdate);
         $schemaVersionStatement->execute();
+
     }
-    
-    public function attach($eventName, callable $listener)
-    {
+
+    public function attach($eventName, callable $listener) {
         $this->eventManager->attach($eventName, $listener);
     }
-    
-    protected function update_001 ()
-    {
-        $iniTable = new CreateTable(self::INI_TABLE);
 
-        $option = new Varchar('option');
-        $value = new Varchar('value');
+    protected function update_001() {
+        $iniTable = new Ddl\CreateTable(self::INI_TABLE);
+
+        $option = new Ddl\Column\Varchar('option');
+        $value  = new Ddl\Column\Varchar('value');
 
         $iniTable->addColumn($option);
         $iniTable->addColumn($value);
@@ -152,14 +151,17 @@ class Migrations
         $sql = new Sql($this->adapter);
         $insertInitialVersion = $sql->insert();
         $insertInitialVersion->into(self::INI_TABLE);
-        $value = [
-            'option' => self::SCHEMA_OPTION_NAME,
-            'value' => 1,
+//        $insertInitialVersion->columns(array('option', 'value'));
+//        $insertInitialVersion->values(array('ZftSchemaVersion', 1));
+        $values = [
+            'option' => 'ZftSchemaVersion',
+            'value' => 1
         ];
-        $insertInitialVersion->columns(array_keys($value));
-        $insertInitialVersion->values(array_values($value));
+        $insertInitialVersion->columns(array_keys($values));
+        $insertInitialVersion->values(array_values($values));
 
         $insertStatement = $sql->prepareStatementForSqlObject($insertInitialVersion);
         $insertStatement->execute();
     }
+
 }

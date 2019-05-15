@@ -4,8 +4,7 @@ namespace ZFT\Migrations;
 
 use Zend\EventManager\Event;
 
-class MigrationsEvent extends Event
-{
+class MigrationsEvent extends Event {
     const MIGRATIONS_START = 'migrations.start';
     const UPDATE_START = 'migrations.update.start';
     const UPDATE_FINISH = 'migrations.update.finish';
