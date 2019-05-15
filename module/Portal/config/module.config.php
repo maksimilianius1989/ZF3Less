@@ -7,12 +7,15 @@
 
 namespace Portal;
 
+use Interop\Container\ContainerInterface;
+use Portal\Controller\IndexController;
 use Portal\Controller\ProfileController;
 use Portal\Controller\UserRelatedControllerFactory;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Method;
 use Zend\Router\Http\Segment;
 use Zend\ServiceManager\Factory\InvokableFactory;
+use ZFT\User;
 
 return [
     'router' => [
@@ -100,9 +103,9 @@ return [
         'doctype'                  => 'HTML5',
         'not_found_template'       => 'error/404',
         'exception_template'       => 'error/index',
-        'layout' => 'layout/portal',
+        'layout'                   => 'layout/portal',
         'template_map' => [
-            'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
+            'layout/portal'           => __DIR__ . '/../view/layout/layout.phtml',
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',

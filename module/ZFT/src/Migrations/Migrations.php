@@ -2,13 +2,13 @@
 
 namespace ZFT\Migrations;
 
-use Faker\Generator;
-use Faker\Provider\ru_RU\Person;
+use Faker;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Adapter\Platform\PlatformInterface;
 use Zend\Db\Metadata\MetadataInterface;
 use Zend\Db\Metadata\Object\TableObject;
 use Zend\Db\Metadata\Source\Factory as MetadataFactory;
+use Zend\Db\Sql\Insert;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Ddl;
 use Zend\Db\Sql\Where;
@@ -166,9 +166,8 @@ class Migrations {
         $insertStatement->execute();
     }
 
-    protected function update_002 ()
-    {
-        //        $usersTable = new Ddl\CreateTable('users');
+    protected function update_002() {
+//        $usersTable = new Ddl\CreateTable('users');
 //        $id = new Ddl\Column\Integer('id');
 //        $firstName= new Ddl\Column\Varchar('first_name');
 //        $surName = new Ddl\Column\Varchar('surname');
@@ -185,9 +184,11 @@ class Migrations {
 //        $insert = new Insert('users');
 //        $insert->columns(['id', 'first_name', 'surname', 'patronymic']);
 
-        $faker = new Generator();
-        $faker->addProvider(new Person($faker));
-        for ($i = 0; $i < 10; $i++) {
+
+        $faker = new Faker\Generator();
+        $faker->addProvider(new Faker\Provider\ru_RU\Person($faker));
+        for($i = 0; $i < 10; $i++) {
+
 
 //            $insert->values([
 //                'id' => $i,
@@ -198,5 +199,7 @@ class Migrations {
 
             $v = 1;
         }
+
     }
+
 }

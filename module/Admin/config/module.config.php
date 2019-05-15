@@ -21,7 +21,7 @@ return [
                 'may_terminate' => true,
                 'child_routes' => [
                     'users' => [
-                        'type' => Segment::class,
+                       'type' => Segment::class,
                         'options' => [
                             'route' => '/:controller[/:id/:action]',
                             'defaults' => [
