@@ -179,6 +179,7 @@ class Migrations {
 
     protected function update_002() {
         $usersTable = new Ddl\CreateTable('users');
+        $usersTable->addConstraint(new Utf8());
 
         // mysql version
         $id = new Ddl\Column\Integer('id');
