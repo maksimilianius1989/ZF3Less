@@ -3,6 +3,7 @@
 namespace ZFT\Migrations;
 
 use Faker;
+use Zend\Console\Charset\Utf8;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Adapter\Platform\PlatformInterface;
 use Zend\Db\Metadata\MetadataInterface;
@@ -52,7 +53,7 @@ class Migrations {
     }
 
     protected function getVersion() {
-        $tables = $this->metadata->getTables('public');
+        $tables = $this->metadata->getTables('app');
 
         $iniTable = array_filter($tables, function (TableObject $table) {
             return strcmp($table->getName(), self::INI_TABLE) === 0;
@@ -178,6 +179,7 @@ class Migrations {
 
     protected function update_002() {
         $usersTable = new Ddl\CreateTable('users');
+        $usersTable->addConstraint(new Utf8());
 
         // mysql version
         $id = new Ddl\Column\Integer('id');
