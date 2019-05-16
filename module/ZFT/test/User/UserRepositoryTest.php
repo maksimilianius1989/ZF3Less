@@ -30,8 +30,7 @@ class UserRepositoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf(User\Repository::class, $repository);
     }
 
-    public function testGetSameObjectWithMultipleRequests()
-    {
+    public function testGetSameObjectWithMultipleRequests() {
         $dataMapperStub = new class() implements User\DataMapperInterface {
 
         };

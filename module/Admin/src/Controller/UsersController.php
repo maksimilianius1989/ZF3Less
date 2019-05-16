@@ -8,7 +8,8 @@ use ZFT\User;
 
 class UsersController extends AbstractActionController
 {
-    /** @var User\Repository */
+
+    /** @var  User\Repository */
     private $userRepository;
 
     public function __construct(User\Repository $userRepository) {

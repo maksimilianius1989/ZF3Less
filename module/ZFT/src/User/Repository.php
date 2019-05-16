@@ -8,38 +8,34 @@ class Repository {
 
     private $identityMap = [];
 
-    /** @var TableGateway */
+    /** @var TableGateway  */
     private $usersTable;
-
-    function __construct(TableGateway $usersTable) {
+    public function __construct(TableGateway $usersTable) {
         $this->usersTable = $usersTable;
     }
 
     public function getUserById($id) {
-        if (array_key_exists($id, $this->identityMap)) {
+        if(array_key_exists($id, $this->identityMap)) {
             return $this->identityMap[$id];
         }
 
-        $userResultSet = $this->usersTable->select(['id' => $id]);
+        $userResultSet = $this->usersTable->select(['id' => $id]); // WHERE id = 1
         $user = $userResultSet->current();
+
 
         $this->identityMap[$id] = $user;
         return $user;
     }
 
-    public function getUsersByGroup(Group $group)
-    {
+    public function getUsersByGroup(Group $group) {
 
     }
 
-    public function getAll()
-    {
+    public function getAll() {
 
     }
 
-    public function commit()
-    {
+    public function commit() {
 
     }
-
 }

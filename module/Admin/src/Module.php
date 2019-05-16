@@ -21,11 +21,11 @@ class Module implements ConfigProviderInterface, BootstrapListenerInterface {
     }
 
     public function onBootstrap(EventInterface $e) {
-        /** @var MvcEvent $application */
+        /** @var MvcEvent $e */
         $application = $e->getApplication();
 
-        $application->getEventManager()->getSheredManager()->attach(__NAMESPACE__, 'dispatch', function (MvcEvent $event) {
-            $event->getTarget()->layout('layout/admin');
+        $application->getEventManager()->getSharedManager()->attach(__NAMESPACE__,  'dispatch', function(MvcEvent $e) {
+            $e->getTarget()->layout('layout/admin');
         });
     }
 

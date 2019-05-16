@@ -171,16 +171,18 @@ class Migrations {
 
         // mysql version
 //        $id = new Ddl\Column\Integer('id');
-        $firstName= new Ddl\Column\Varchar('first_name');
+//        $id->setOption('autoincrement', true);
+        $firstName = new Ddl\Column\Varchar('first_name');
         $surName = new Ddl\Column\Varchar('surname');
         $patronymic = new Ddl\Column\Varchar('patronymic');
-
         $email = new Ddl\Column\Varchar('email');
-//
+
+        // mysql version
 //        $usersTable->addColumn($id);
         $usersTable->addColumn($firstName);
         $usersTable->addColumn($surName);
         $usersTable->addColumn($patronymic);
+        $usersTable->addColumn($email);
         $this->execute($usersTable);
 
         $this->adapter->query('ALTER TABLE users ADD COLUMN id SERIAL PRIMARY KEY', Adapter::QUERY_MODE_EXECUTE);
@@ -200,6 +202,9 @@ class Migrations {
                 'patronymic' => $name[1],
                 'email' => $faker->email
             ]);
+
+            $insertStatement = $sql->prepareStatementForSqlObject($insert);
+            $insertStatement->execute();
         }
 
     }
