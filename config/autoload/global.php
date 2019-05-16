@@ -12,12 +12,18 @@
  */
 
 return [
+//    'db' => [
+//        'hostname' => 'db',
+//        'driver' => 'Pdo_Pgsql',
+//        'database' => 'dbname',
+//        'username' => 'dbuser',
+//        'password' => 'dbpwd',
+//    ],
     'db' => [
-        'hostname' => 'db',
-        'driver' => 'Pdo_Pgsql',
-        'database' => 'dbname',
-        'username' => 'dbuser',
-        'password' => 'dbpwd',
+        'driver'   => 'Pdo',
+        'dsn'      => 'mysql:dbname=app;host=mysql',
+        'username' => 'app',
+        'password' => 'secret',
     ],
     'ldap' => [
         'host' => '192.168.0.101',

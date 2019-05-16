@@ -8,6 +8,7 @@ use Zend\Db\Adapter\Platform\PlatformInterface;
 use Zend\Db\Metadata\MetadataInterface;
 use Zend\Db\Metadata\Object\TableObject;
 use Zend\Db\Metadata\Source\Factory as MetadataFactory;
+use Zend\Db\Sql\Ddl\Constraint\PrimaryKey;
 use Zend\Db\Sql\Insert;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Ddl;
@@ -142,13 +143,22 @@ class Migrations {
     protected function update_001() {
         $iniTable = new Ddl\CreateTable(self::INI_TABLE);
 
+        $id = new Ddl\Column\Integer('id');
+        $id->setOption('autoincrement', true);
         $option = new Ddl\Column\Varchar('option');
         $value  = new Ddl\Column\Varchar('value');
 
+        $option->setLength(50);
+        $value->setLength(50);
+
+        $iniTable->addColumn($id);
         $iniTable->addColumn($option);
         $iniTable->addColumn($value);
 
+        $iniTable->addConstraint(new PrimaryKey('id'));
+
         $this->execute($iniTable);
+
 
         $sql = new Sql($this->adapter);
         $insertInitialVersion = $sql->insert();
@@ -170,22 +180,30 @@ class Migrations {
         $usersTable = new Ddl\CreateTable('users');
 
         // mysql version
-//        $id = new Ddl\Column\Integer('id');
-//        $id->setOption('autoincrement', true);
+        $id = new Ddl\Column\Integer('id');
+        $id->setOption('autoincrement', true);
         $firstName = new Ddl\Column\Varchar('first_name');
         $surName = new Ddl\Column\Varchar('surname');
         $patronymic = new Ddl\Column\Varchar('patronymic');
         $email = new Ddl\Column\Varchar('email');
 
+        $firstName->setLength(50);
+        $surName->setLength(50);
+        $patronymic->setLength(50);
+        $email->setLength(50);
+
         // mysql version
-//        $usersTable->addColumn($id);
+        $usersTable->addColumn($id);
         $usersTable->addColumn($firstName);
         $usersTable->addColumn($surName);
         $usersTable->addColumn($patronymic);
         $usersTable->addColumn($email);
+
+        $usersTable->addConstraint(new PrimaryKey('id'));
+
         $this->execute($usersTable);
 
-        $this->adapter->query('ALTER TABLE users ADD COLUMN id SERIAL PRIMARY KEY', Adapter::QUERY_MODE_EXECUTE);
+//        $this->adapter->query('ALTER TABLE users ADD COLUMN id SERIAL PRIMARY KEY', Adapter::QUERY_MODE_EXECUTE);
 
         $faker = new Faker\Generator();
         $faker->addProvider(new Faker\Provider\ru_RU\Person($faker));
